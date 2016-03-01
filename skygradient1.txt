@@ -1,0 +1,29 @@
+float smootherstep(float x)
+{
+	return x * x * x * (x * ( x * 6.0 - 15.0) + 10.0);
+}
+
+float impulse( float k, float x )
+{
+    float h = k*x;
+    return h*exp(1.0 - h);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+	vec2 uv = fragCoord.xy / iResolution.xy;
+	float f = uv.y;
+    
+    // red component
+    float r = 1.0 - smootherstep(0.16 + 0.8 * f);
+    
+    // green component
+    float g = 0.0;
+    g += 0.2 * impulse(2.0, f);
+    g += 0.2 + 0.4 * (1.0 - f);
+    
+	// blue component
+    float b = 0.4 + 0.4 * impulse(2.0, f);
+    
+    fragColor = vec4(r, g, b, 1.0);
+}
